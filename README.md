@@ -186,8 +186,8 @@ helm upgrade --install stable prometheus-community/kube-prometheus-stack --names
 > `Логин/пароль` для доступа к вэб-интерфейсу: `admin/prom-operator`
 #### Результат:  
 > [Git репозиторий](https://github.com/AVasMakarov/Diplom) с конфигурационными файлами для развертывания Kubernetes  
-![1]()
-![2]()
+![Дашборды в grafana](https://github.com/AVasMakarov/Diplom/blob/master/Screenshots/1.png?raw=true)
+![Http доступ к тестовому приложению](https://github.com/AVasMakarov/Diplom/blob/master/Screenshots/2.png?raw=true)
 ---
 ### Установка и настройка CI/CD
 
@@ -217,8 +217,8 @@ helm upgrade --install stable prometheus-community/kube-prometheus-stack --names
 git add -A && git commit -am "run CI/CD with tag=v1.1.0" && git tag -af v1.1.0 -m "my version app v1.1.0" && \
 git push -u origin v1.1.0
 ```
-![3]()
-![4]()
+![Интерфейс ci/cd сервиса доступен по http](https://github.com/AVasMakarov/Diplom/blob/master/Screenshots/3.png?raw=true)
+![Сборка и отправка образа с соответствующим label в регистри](https://github.com/AVasMakarov/Diplom/blob/master/Screenshots/4.png?raw=true)
 ---
 ## Что необходимо для сдачи задания?
 
