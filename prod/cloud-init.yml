@@ -10,4 +10,4 @@ package_update: true
 package_upgrade: false
 packages:
   - vim
-  - nginx
+#  - nginx

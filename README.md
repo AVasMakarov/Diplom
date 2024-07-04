@@ -214,7 +214,7 @@ helm upgrade --install stable prometheus-community/kube-prometheus-stack --names
 > В секреты были добавлены  
 > - `DOCKER_USERNAME` #логин с DockerHub,  
 > - `DOCKER_PASSWORD` #API ключ созданный в ЛК DockerHub для подключения,  
-> - `KUBE_CONFIG_BASE64_DATA` #создается выполнением команды `echo "содержимое файла ~/.kube/config" | base64` получится набор из букв, цифр и символов, которые вставляем в секрет
+> - `KUBE_CONFIG_BASE64_DATA` #создается выполнением команды `cat ~/.kube/config | base64` получится набор из букв, цифр и символов, которые вставляем в секрет
 
 #### Результат:
 ```bash
@@ -236,3 +236,40 @@ git push -u origin v1.1.0
 5. Репозиторий с конфигурацией Kubernetes кластера.
 6. Ссылка на тестовое приложение и веб интерфейс Grafana с данными доступа.
 7. Все репозитории рекомендуется хранить на одном ресурсе (github, gitlab)
+
+## Доработка 04.07.2024
+
+> Внес следующие изменения в проект:
+> - изменения в docker-publish.yml, теперь образ собирается только при пуше с тэгом
+> - в myapp-deploment.yaml указал имя образа для деплоя в кластер
+> - удалил строки из werf.yml, теперь werf не пересобирает образ, а берет собранный из Docker Hub с тэгом
+
+> docker-publish.yaml
+```yaml
+...
+push:
+  #    branches: [ "master" ] # закомментировал чтобы образ собирался только при пуше с тэгом
+  tags: [ 'v*.*.*' ]
+#  pull_request:            # закомментировал чтобы образ собирался только при пуше с тэгом
+#    branches: [ "master" ] # закомментировал чтобы образ собирался только при пуше с тэгом
+...
+...
+- name: Converge
+  uses: werf/actions/converge@v2
+  env:
+    WERF_SET_STRING_IMAGE: image="${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}" #переменная с именем образа
+  with:
+    kube-config-base64-data: ${{ secrets.KUBE_CONFIG_BASE64_DATA }}
+...
+```
+
+> myapp-deployment.yaml
+```yaml
+...
+spec:
+  containers:
+    - name: app-web
+      image: {{ $.Values.image }} #переменная с именем образа
+  terminationGracePeriodSeconds: 30
+...
+```

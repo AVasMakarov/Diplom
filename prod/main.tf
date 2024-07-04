@@ -8,11 +8,11 @@ data "template_file" "cloudinit" {
 resource "yandex_compute_instance" "cluster-k8s" {
   count   = 3
   name                      = "node${count.index}"
-  zone                      = "${var.subnet-zones[count.index]}"
+  zone                      = var.subnet-zones[count.index]
   hostname                  = "node${count.index}"
   allow_stopping_for_update = true
   labels = {
-    index = "${count.index}"
+    index = count.index
   }
 
   scheduling_policy {
@@ -26,7 +26,7 @@ resource "yandex_compute_instance" "cluster-k8s" {
 
   boot_disk {
     initialize_params {
-      image_id    = "${var.ubuntu-2004-lts}"
+      image_id    = var.ubuntu-2004-lts
       type        = "network-ssd"
       size        = "10"
     }
@@ -34,7 +34,7 @@ resource "yandex_compute_instance" "cluster-k8s" {
 
   network_interface {
 
-    subnet_id  = "${yandex_vpc_subnet.subnet-zones[count.index].id}"
+    subnet_id  = yandex_vpc_subnet.subnet-zones[count.index].id
     nat        = true
   }
 
